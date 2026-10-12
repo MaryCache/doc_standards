@@ -1,0 +1,10 @@
+{
+  "doc_type": "external-design",
+  "forbidden": [
+    {"term": "クラス図", "reason": "クラス構造は詳細設計(内部設計)の成果物（P2: 外部設計は外部観測仕様に限る・詳細設計へ移送）"},
+    {"term": "シーケンス図", "reason": "内部処理フローは詳細設計級（P2: 外部設計に内部実装を混在させない）"},
+    {"term": "インデックス", "reason": "物理index種別はDB物理設計＝詳細設計（P5: 外部設計はデータの物理に立ち入らない。detailed-design-dataでは許容＝doc_type別語。data-designは一般語でなく具体種別btreeで物理先取りを検出するため『インデックス』自体は弾かない）"},
+    {"term": "テーブル定義", "reason": "物理テーブル定義は詳細設計データ設計（P2/P3: 外部設計はCRUD図/エンティティ名まで。srs禁止/detailed必須見出しのdoc_type別語）"}
+  ],
+  "note": "API語(REST/OpenAPI/endpoint/Swagger)・技術スタック名・ピクセル/hexカラーは誤爆ゆえvocabに入れずrubric/external-design.mdの質的観点へ委譲(P2訂正・cycle-4 srs踏襲)。モジュール分割はsrsでは禁止だが外部設計ではシステム構成図を正当に含むため不採用。特にSQLは製品名PostgreSQL/NoSQL/MySQL等の部分文字列で部分一致チェッカーが誤爆するためvocabから外し、SQLクエリ/DB操作文の混入もvocabに入れずrubric/external-design.mdの質的観点(内部仕様leak)で判定する(cycle-8で横断的に検出・architecture-designと同方針)。"
+}

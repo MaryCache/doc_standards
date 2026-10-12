@@ -1,0 +1,9 @@
+{
+  "doc_type": "architecture-design",
+  "forbidden": [
+    {"term": "クラス図", "reason": "クラス構造は詳細設計(内部設計)の成果物（P2: 方式設計はアーキ方式/コンポーネント構成まで・内部実装は詳細設計へ）"},
+    {"term": "メソッド仕様", "reason": "メソッドの引数/戻り値/処理は詳細設計（P2: 方式設計は外から見たコンポーネント構成まで。detailed-design-dataでは正当のdoc_type別語）"},
+    {"term": "シーケンス図", "reason": "内部処理フロー/相互作用は詳細設計級（P2: 方式設計に内部実装を混在させない）"}
+  ],
+  "note": "技術スタック名・製品名・プロトコル名は方式設計では『技術選定』の核＝禁止しない。特にSQLは製品名PostgreSQL/NoSQL/MySQL等の部分文字列で部分一致チェッカーが誤爆するため、SQLクエリ(DB操作文)の混入もvocabに入れずrubric/architecture-design.mdの質的観点(内部実装leak/技術選定根拠)で判定する(cycle-8で実機検出・vocab非対称)。"
+}

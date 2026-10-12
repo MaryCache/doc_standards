@@ -1,0 +1,6 @@
+{
+  "doc_type": "detailed-design-data",
+  "forbidden": [
+    {"term": "なぜなら業務", "reason": "業務上の理由は要件で既出（P2: 上位の Why を詳細設計に転記しない）"}
+  ]
+}

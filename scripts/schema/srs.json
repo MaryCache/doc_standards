@@ -1,0 +1,4 @@
+{
+  "doc_type": "srs",
+  "required_headings": ["機能要件一覧", "非機能要件", "トレーサビリティ"]
+}

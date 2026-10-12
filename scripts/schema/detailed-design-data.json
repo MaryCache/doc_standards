@@ -1,0 +1,4 @@
+{
+  "doc_type": "detailed-design-data",
+  "required_headings": ["物理ER", "テーブル定義", "制約とインデックス", "トレーサビリティ"]
+}

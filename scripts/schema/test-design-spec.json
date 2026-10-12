@@ -1,0 +1,4 @@
+{
+  "doc_type": "test-design-spec",
+  "required_headings": ["テスト条件", "網羅方針", "トレーサビリティ"]
+}

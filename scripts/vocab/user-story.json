@@ -1,0 +1,5 @@
+{
+  "doc_type": "user-story",
+  "forbidden": [],
+  "note": "agile User Story は逸脱(主語=System/so that欠落/実装動詞 configure・upgrade・migrate/AC>5/INVEST違反)が構造・件数・文脈判定で部分一致では原理的に拾えないため forbidden を意図的に空とする。実装動詞は英語部分一致が migrated/upgrades 等に誤爆し、かつ正当なユーザー価値動詞と同一トークンのため vocab でなく rubric/user-story.md の質的観点へ委ねる(council 決定 2026-06-04・S4・srs 技術名前例と同方針)。空 forbidden は status=pass を返す(skipped でなく)＝『禁止語の逸脱なし』の狭い主張。"
+}

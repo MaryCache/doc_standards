@@ -1,0 +1,4 @@
+{
+  "doc_type": "detailed-design-process",
+  "required_headings": ["モジュール構造", "処理仕様", "トレーサビリティ"]
+}

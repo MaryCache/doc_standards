@@ -1,0 +1,5 @@
+{
+  "doc_type": "adr",
+  "forbidden": [],
+  "note": "agile ADR は vocab を意図的に空にする(design-doc/user-story と同型・acceptance-criteria とは非対称)。ADR の逸脱(事後正当化〔承認なし accepted〕/trivial な決定の ADR 化〔Prettier 等・可逆で影響小〕/Why の記述なし)はいずれも構造・文脈の判定であり、特定の禁止トークンの部分一致では原理的に拾えない。『却下案なし』(Why の片側欠落)は必須見出し『却下案』の欠落として check_headings が機械検出するため vocab 不要。残る逸脱(事後正当化・trivial・Why なし)に明確な定型句マーカーは無く、仮に置いても正当な ADR 記述(承認済みの『accepted』状態宣言・正当な小さい決定の言及)と同一トークンになり部分一致が誤爆する。vocab の有無は『その doc_type の逸脱が機械で綺麗に拾えるか』で決まる(agile/WF の別ではない)＝acceptance-criteria は Then の曖昧期待結果3語が部分一致誤爆なく拾えたため vocab を持ったが、ADR の逸脱は拾えないため空にする(design-doc と同型)。事後正当化・trivial・Why なしは rubric/adr.md の質的判定へ委ねる(agile rubric 主導は維持)。ADR の採番・生成・内容評価(却下案が技術的に妥当か等)は architecture-decision-records スキルが所有し doc-standards は粒度境界のみ定義する(S5・二重定義回避)。空 forbidden は status=pass を返す(skipped でなく)＝『禁止語の逸脱なし』の狭い主張。"
+}

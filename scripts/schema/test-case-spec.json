@@ -1,0 +1,4 @@
+{
+  "doc_type": "test-case-spec",
+  "required_headings": ["テストケース", "トレーサビリティ"]
+}

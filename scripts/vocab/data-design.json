@@ -1,0 +1,7 @@
+{
+  "doc_type": "data-design",
+  "forbidden": [
+    {"term": "btree", "reason": "物理index種別は物理ER節へ（P5: 厳密値は詳細）"},
+    {"term": "なぜなら業務", "reason": "業務上の理由は要件で既出（P2: 要件をデータ設計に転記しない）"}
+  ]
+}

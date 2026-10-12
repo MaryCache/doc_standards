@@ -1,0 +1,4 @@
+{
+  "doc_type": "test-procedure-spec",
+  "required_headings": ["前提", "実行手順", "トレーサビリティ"]
+}

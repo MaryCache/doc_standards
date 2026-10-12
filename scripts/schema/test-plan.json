@@ -1,0 +1,4 @@
+{
+  "doc_type": "test-plan",
+  "required_headings": ["スコープ", "終了基準", "トレーサビリティ"]
+}

@@ -1,0 +1,4 @@
+{
+  "doc_type": "adr",
+  "required_headings": ["Context", "Decision", "Status", "却下案", "Consequences"]
+}

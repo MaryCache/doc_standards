@@ -1,0 +1,6 @@
+{
+  "doc_type": "detailed-design-process",
+  "forbidden": [
+    {"term": "なぜなら業務", "reason": "業務上の理由は要件/基本設計で既出（P2: 上位の Why を詳細設計に転記しない）。detailed-design-data から踏襲＝処理詳細も同じ詳細設計工程で業務理由を書かない。経験検証で出番あり∧誤爆なしを確認"}
+  ]
+}

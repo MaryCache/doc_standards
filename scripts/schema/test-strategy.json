@@ -1,0 +1,4 @@
+{
+  "doc_type": "test-strategy",
+  "required_headings": ["テスト方針", "テストレベル", "トレーサビリティ"]
+}
