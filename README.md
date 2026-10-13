@@ -57,15 +57,18 @@
 
 ### Claude Code のスキルとして使う
 
-リポジトリをスキルのディレクトリへ clone します。
+[skills](https://github.com/vercel-labs/skills) コマンドで入れます。
 
 ```sh
-git clone https://github.com/MaryCache/doc_standards ~/.claude/skills/doc-standard
+npx skills add MaryCache/doc_standards -a claude-code -g
 ```
 
+`-g` を付けると、すべてのプロジェクトで使えるように `~/.claude/skills/doc-standard` へ入ります。
+`-g` を外すと、いま開いているプロジェクトの `.claude/skills/doc-standard` に入ります。
+
 リポジトリの直下にある `SKILL.md` がスキルの本体で、ライブラリのファイルを相対パスで読みます。
-そのため、clone した場所がそのままスキルとして動きます。
-プロジェクトだけで使うなら、そのプロジェクトの `.claude/skills/doc-standard` に clone しても同じです。
+そのため、`git clone https://github.com/MaryCache/doc_standards ~/.claude/skills/doc-standard` のように、スキルのディレクトリへ clone しても同じように動きます。
+更新を `git pull` で受け取りたいときは、こちらを使ってください。
 
 スキルは「設計書を書いて」「このドキュメントの粒度をチェックして」のような依頼で起動します。
 書くときはレシピに沿って下書きを作り、チェックするときは機械判定とルーブリックの判定を分けて報告します。
