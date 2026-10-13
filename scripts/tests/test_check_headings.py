@@ -555,3 +555,37 @@ def test_pr_faq_missing_success_metrics_is_detected():
     # 残る3見出しは欠落しない（誤検出回帰防止＝デコイで誤 pass していないことの裏面）
     for h in ["プレスリリース", "想定問答", "トレーサビリティ"]:
         assert h not in result["missing"]
+
+
+# --- implementation-plan（共通・実装計画）スライス ---
+# 必須見出し = 作業の順番 / 順番の理由 / トレーサビリティ（3つ以内＝範囲を広げない）。
+# 「順番の理由」を独立必須にして、理由のない順番（依存の見落とし）を見出し欠落で機械検出する。
+
+_IMPLEMENTATION_PLAN_REQUIRED = ["作業の順番", "順番の理由", "トレーサビリティ"]
+
+
+def test_implementation_plan_good_has_no_missing():
+    result = ch.check(str(FIX / "implementation-plan-good.md"), "implementation-plan")
+    assert result["status"] == "pass"
+    assert result["missing"] == []
+
+
+def test_implementation_plan_missing_reason_is_detected():
+    # missing fixture は作業の順番とトレーサビリティを持ち、順番の理由を欠く。
+    result = ch.check(str(FIX / "implementation-plan-missing-headings.md"), "implementation-plan")
+    assert result["status"] == "deviation"
+    assert "順番の理由" in result["missing"]
+    for h in ["作業の順番", "トレーサビリティ"]:
+        assert h not in result["missing"]
+
+
+def test_implementation_plan_schema_has_three_headings():
+    import json
+    schema = json.loads((Path(ch.__file__).resolve().parent / "schema" / "implementation-plan.json").read_text(encoding="utf-8"))
+    assert schema["required_headings"] == _IMPLEMENTATION_PLAN_REQUIRED
+
+
+def test_implementation_plan_recipe_body_has_required_headings():
+    result = ch.check(str(Path(__file__).resolve().parents[2] / "common" / "implementation-plan.md"), "implementation-plan")
+    assert result["status"] == "pass"
+

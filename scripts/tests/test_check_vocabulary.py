@@ -138,6 +138,32 @@ def test_srs_marker_in_code_block_not_flagged():
     assert "インデックス" not in terms
 
 
+def test_srs_progress_terms_detected_outside_code():
+    """作る順番・進み具合の記録（実装済み/実装中）は地の文に出たら逸脱として検出する（cycle-23）。"""
+    result = cv.check(str(FIX / "srs-vocab-violation.md"), "srs")
+    terms = [h["term"] for h in result["hits"]]
+    assert "実装済み" in terms
+    assert "実装中" in terms
+
+def test_srs_progress_term_in_code_block_not_flagged():
+    """フェンス内の『実装着手』は検査対象外。"""
+    result = cv.check(str(FIX / "srs-vocab-violation.md"), "srs")
+    terms = [h["term"] for h in result["hits"]]
+    assert "実装着手" not in terms
+
+def test_srs_priority_words_not_forbidden():
+    """優先度（MoSCoW 等）は正当な要件属性＝禁止語にしない。"""
+    vocab = cv.load_vocab("srs")
+    hits = cv.find_hits("FR-01 の優先度は Must。FR-02 の優先度は Should とする", vocab["forbidden"])
+    assert hits == []
+
+def test_srs_recipe_body_passes_vocab():
+    """レシピ本体は禁止語を地の文に書かない（フェンス内に置く技法）＝pass。"""
+    result = cv.check(str(Path(__file__).resolve().parents[2] / "waterfall" / "requirements" / "srs.md"), "srs")
+    assert result["status"] == "pass"
+    assert result["hits"] == []
+
+
 # --- test-case-spec（テスト・ケース仕様）スライス ---
 # 禁止語 = 期待結果の曖昧表現マーカー3語（正しく表示 / 正しく動作 / 適切に処理）。
 # 測定不能な期待結果＝検証可能でない記述の検出点（P6: 期待結果は測定可能/観測可能に書く）。
@@ -457,22 +483,52 @@ def test_od_procedure_word_not_flagged():
 
 
 # --- design-doc（アジャイル・Design Doc）スライス ---
-# vocab は空（forbidden:[]）＝設計上の判断（user-story と同型・acceptance-criteria とは非対称）。
+# vocab は進み具合の3語（実装済み / 実装中 / 実装着手）だけ持つ（cycle-23。それまでは空＝user-story と同型）。
 # Design Doc の逸脱（全セクション強制記入/arc42 全12セクション埋め/C4 の L4 を最初から全描画/
 # 自明な実装・バグ修正の過剰文書化/gold plating）は構造・量・文脈の判定で、特定の禁止トークンの
 # 部分一致では原理的に拾えない。とりわけ『クラス図』を禁止語にすると C4/詳細設計への正当な委譲を
-# 語る文で誤爆する。vocab の有無は『逸脱が機械で綺麗に拾えるか』で決まる（agile/WF の別ではない）。
-# 質的判定は rubric/design-doc.md に委ねる（agile rubric 主導・S4）。
+# 語る文で誤爆する。一方、進み具合の記録（設計書は納品物＝納品後に正しくなくなる）は実際の設計書で
+# この3語にだけ出て機械で拾えたため持たせた。vocab の有無は『逸脱が機械で綺麗に拾えるか』で決まる
+# （agile/WF の別ではない）。質的判定は rubric/design-doc.md に委ねる（agile rubric 主導・S4）。
 
-def test_design_doc_empty_vocab_returns_pass():
-    """空 forbidden（[]）の vocab は status=pass を返す（skipped ではない）。
+def test_design_doc_good_has_no_progress_terms():
+    """design-doc good fixture は進み具合の語を含まない＝pass のまま（誤爆回帰防止）。
 
-    user-story の空 vocab pass テストと同型。forbidden が空でも vocab ファイルは存在し
-    JSON も正常なので skipped（ファイル不在/破損時のみ）にはならず、ヒット 0 件 → pass を返す。
-    Design Doc の逸脱は機械の禁止語では拾えず rubric 主導という設計判断（S4）が、機械上
-    pass として表れることを保証する（acceptance-criteria が vocab を持つのとは非対称）。
+    forbidden が非空になっても、既存の正常系 fixture は禁止語に当たらず status=pass を返す。
     """
     result = cv.check(str(FIX / "design-doc-good.md"), "design-doc")
+    assert result["status"] == "pass"
+    assert result["hits"] == []
+
+def test_design_doc_progress_terms_are_deviation():
+    """進み具合の記録（実装済み/実装中/実装着手）は地の文に出たら逸脱として検出する。"""
+    result = cv.check(str(FIX / "design-doc-vocab-violation.md"), "design-doc")
+    assert result["status"] == "deviation"
+    terms = [h["term"] for h in result["hits"]]
+    assert "実装済み" in terms
+    assert "実装中" in terms
+    assert "実装着手" in terms
+
+def test_design_doc_phase_word_itself_not_forbidden():
+    """『フェーズ』『クラス図』は禁止語にしない（設計の判断としての分け方・委譲記述で正当に出る）。"""
+    vocab = cv.load_vocab("design-doc")
+    terms = [e["term"] for e in vocab["forbidden"]]
+    assert "フェーズ" not in terms
+    assert "クラス図" not in terms
+    hits = cv.find_hits("データ移行の影響が大きいためフェーズを分ける。クラス図レベルは詳細設計へ委譲する", vocab["forbidden"])
+    assert hits == []
+
+def test_design_doc_progress_term_in_code_block_not_flagged():
+    """フェンス内の進み具合の語は検査対象外（レシピ自身が禁止語を列挙できる技法）。"""
+    result = cv.check(str(FIX / "design-doc-vocab-violation.md"), "design-doc")
+    prose = cv.strip_code_blocks((FIX / "design-doc-vocab-violation.md").read_text(encoding="utf-8"))
+    assert "フェンス内なので非検出" not in prose
+    # フェンス内にだけ置いた『実装中』の1箇所は hits に重複計上されない（語単位で1件）
+    assert [h["term"] for h in result["hits"]].count("実装中") == 1
+
+def test_design_doc_recipe_body_passes_vocab():
+    """レシピ本体は禁止語を地の文に書かない（フェンス内に置く技法）＝pass。"""
+    result = cv.check(str(Path(__file__).resolve().parents[2] / "agile" / "design-doc.md"), "design-doc")
     assert result["status"] == "pass"
     assert result["hits"] == []
 
@@ -790,3 +846,19 @@ def test_pr_faq_empty_vocab_returns_pass():
     result = cv.check(str(FIX / "pr-faq-good.md"), "pr-faq")
     assert result["status"] == "pass"
     assert result["hits"] == []
+
+
+# --- implementation-plan（共通・実装計画）スライス ---
+# vocab は空（forbidden:[]）＝設計上の判断（design-doc/rfc と同型）。計画の逸脱(計画の中で設計を
+# 初めて決める/順番に理由がない)は文脈の判定で部分一致では拾えない。進み具合の語は計画では版の履歴や
+# 前提の説明として正当に出うる(計画は版を重ねてよい)ため禁止にしない。rubric/implementation-plan.md に委ねる。
+
+def test_implementation_plan_empty_vocab_returns_pass():
+    """空 forbidden（[]）の vocab は status=pass を返す（skipped ではない）。"""
+    result = cv.check(str(FIX / "implementation-plan-good.md"), "implementation-plan")
+    assert result["status"] == "pass"
+    assert result["hits"] == []
+
+def test_implementation_plan_recipe_body_passes_vocab():
+    result = cv.check(str(Path(__file__).resolve().parents[2] / "common" / "implementation-plan.md"), "implementation-plan")
+    assert result["status"] == "pass"

@@ -1,5 +1,9 @@
 {
   "doc_type": "design-doc",
-  "forbidden": [],
-  "note": "agile Design Doc は vocab を意図的に空にする(user-story と同型・acceptance-criteria とは非対称)。Design Doc の逸脱(全セクション強制記入/arc42 全12セクション埋め/C4 の L4 クラス図を最初から全描画/自明な実装・バグ修正の過剰文書化/gold plating)はいずれも構造・量・文脈の判定であり、特定の禁止トークンの部分一致では原理的に拾えない。とりわけ『クラス図』を禁止語にすると Design Doc が C4/詳細設計へ正当に委譲を語る文(『クラス図レベルは詳細設計へ委譲する』等)で誤爆する。vocab の有無は『その doc_type の逸脱が機械で綺麗に拾えるか』で決まる(agile/WF の別ではない)＝acceptance-criteria は Then の曖昧期待結果3語が部分一致誤爆なく拾えたため vocab を持ったが、Design Doc の逸脱は拾えないため空に戻る。L4 先取り・gold plating・自明文書化は rubric/design-doc.md の質的判定へ委ねる(agile rubric 主導は維持)。空 forbidden は status=pass を返す(skipped でなく)＝『禁止語の逸脱なし』の狭い主張。"
+  "forbidden": [
+    {"term": "実装済み", "reason": "進み具合の記録＝納品後に正しくなくなる(責務対照表: 設計書は『納品したあとも正しいままか』で判定)。implementation-plan／課題管理へ"},
+    {"term": "実装中", "reason": "進み具合の記録＝納品後に正しくなくなる。implementation-plan／課題管理へ"},
+    {"term": "実装着手", "reason": "進み具合の記録＝納品後に正しくなくなる。implementation-plan／課題管理へ"}
+  ],
+  "note": "agile Design Doc の vocab は、これまで意図的に空だった(user-story と同型・acceptance-criteria とは非対称)。Design Doc の逸脱(全セクション強制記入/arc42 全12セクション埋め/C4 の L4 クラス図を最初から全描画/自明な実装・バグ修正の過剰文書化/gold plating)はいずれも構造・量・文脈の判定で、特定の禁止トークンの部分一致では原理的に拾えず、とりわけ『クラス図』を禁止語にすると C4/詳細設計へ正当に委譲を語る文で誤爆する。今回この3語だけ持たせたのは、実際の設計書で進み具合の記録(状態欄の『実装着手』等)にだけ出て機械で拾えたため(cycle-23)。vocab の有無は『その doc_type の逸脱が機械で綺麗に拾えるか』で決まる(agile/WF の別ではない)。fail-open: 既存システムの説明で『実装済み』が正当に出ることがある(現行機能の流用を述べる文など)。その場合は検出が逸脱とは限らず、人間が棄却する。フェーズ分割の中身(割り付けか設計の判断か)は rubric/design-doc.md の質的判定へ委ねる。L4 先取り・gold plating・自明文書化は rubric 側。"
 }

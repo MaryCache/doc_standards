@@ -433,3 +433,29 @@ def test_pr_faq_orphan_empty_cell_is_deviation():
     for o in result["orphans"]:
         assert isinstance(o.get("line"), int)
         assert o["line"] > 0
+
+
+# --- implementation-plan（共通・実装計画）スライス ---
+# トレース表の ID 列ヘッダは「対応する設計」で select_id_column の「対応」を含む列ルールに乗る
+# （第1列＝作業名は主語として除外）。空セル＝設計に戻れない孤立作業を決定論で検出する。
+
+def test_implementation_plan_good_table_passes():
+    result = ct.check(str(FIX / "implementation-plan-good.md"), "implementation-plan")
+    assert result["status"] == "pass"
+    assert result["orphans"] == []
+
+def test_implementation_plan_orphan_is_deviation():
+    result = ct.check(str(FIX / "implementation-plan-orphan.md"), "implementation-plan")
+    assert result["status"] == "deviation"
+    elements = [o["element"] for o in result["orphans"]]
+    assert "在庫補充の自動発注" in elements
+    assert "受注の修正フロー" in elements
+    assert "注文テーブルの追加と移行" not in elements
+    for o in result["orphans"]:
+        assert isinstance(o.get("line"), int)
+        assert o["line"] > 0
+
+def test_implementation_plan_recipe_body_traceability_not_deviation():
+    result = ct.check(str(Path(__file__).resolve().parents[2] / "common" / "implementation-plan.md"), "implementation-plan")
+    assert result["status"] in ("pass", "skipped")
+

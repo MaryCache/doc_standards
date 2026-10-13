@@ -3,7 +3,7 @@
 > **レイヤー**: 第2層レシピ（手法別具体指針・**agile**・Design Doc）
 > **原則参照**: [`../principles/granularity-axis.md`](../principles/granularity-axis.md) が唯一の真実。本ファイルは原則を再定義しない（制約 S3）。
 > **元の出典（2026-10-11 原文照合）**: Malte Ubl「Design Docs at Google」（2020・https://www.industrialempathy.com/posts/design-docs-at-google/）。節は Context and scope／Goals and non-goals（non-goals は「時にゴールより大事」）／The actual design／Alternatives considered／Cross-cutting concerns。長さは大きな案件で 10〜20 ページ、1〜3 ページの mini design doc もありうる。
-> **責務対照**: [`../principles/responsibility-map.md`](../principles/responsibility-map.md) の**アジャイル責務対照表の Design Doc 行**を参照（含む＝Context・Goals/Non-Goals・代替検討・横断懸念／arc42 は必要なセクションのみ・C4 は L1-L2 優先／含まない＝自明な実装・バグ修正の Design Doc 化・arc42 全12セクション埋め強制・C4 の L4 乱用／逸脱＝全セクション強制記入・L4〔クラス図レベル〕を最初から全描画）。
+> **責務対照**: [`../principles/responsibility-map.md`](../principles/responsibility-map.md) の**アジャイル責務対照表の Design Doc 行**を参照（含む＝Context・Goals/Non-Goals・代替検討・横断懸念／arc42 は必要なセクションのみ・C4 は L1-L2 優先／含まない＝自明な実装・バグ修正の Design Doc 化・arc42 全12セクション埋め強制・C4 の L4 乱用・作る順番の割り付けと進み具合／逸脱＝全セクション強制記入・L4〔クラス図レベル〕を最初から全描画）。
 
 ---
 
@@ -26,6 +26,8 @@ agile の第2層は**成果物ライフサイクル軸**（living docs として
 **境界を越えた記述の扱い**:
 - 自明な実装・バグ修正を Design Doc 化していたら、それは過剰文書化である（責務対照表「含まない」）。Design Doc は非自明な設計判断・横断懸念のある変更に限る。
 - 抽象度を上げすぎず下げすぎず、**arc42 は必要なセクションのみ**・**C4 は L1-L2（システム文脈・コンテナ）を優先**し、**L4（クラス図レベル）を最初から全描画しない**。L4 相当のコンポーネント内部の作り込みは詳細設計／コードの領域である。
+- **作る順番の割り付けと進み具合は書かない。** 「フェーズ1〜3にどの要求を入れるか」という割り付け、冒頭の状態欄の「フェーズA完了」「C1 に着手」のような進み具合は、設計書（納品物）には置かない。判定の問いは**納品したあとも正しいままか**であり、作る順番と進み具合は納品後に正しくなくなる。作る順番は [`../common/implementation-plan.md`](../common/implementation-plan.md) へ、進み具合は課題管理へ置く。
+  - ただし**設計の判断として分けた理由**は残してよい。たとえばデータモデルへの影響が大きい変更を先に分けないとデータが壊れる、といった移行の方針・依存は設計の判断であり、理由を付けて書く。外すのは割り付けと進み具合であって、分け方の設計判断ではない。
 - まだ確定していない詳細は無理に書き切らない。スプリント中の会話で必要になった時点で確定する（JIT・living doc）。書き切ろうとすること自体が WF 的な前倒しで、agile の趣旨に反する。
 
 ---
@@ -142,12 +144,20 @@ Non-Goals:
 
 ---
 
-## vocab の説明（Design Doc は vocab を空に戻す／逸脱は rubric 主導）
+## vocab の説明（進み具合の3語だけ持つ／それ以外の逸脱は rubric 主導）
 
-**本 doc_type（design-doc）の機械語彙チェック（vocab）は空である**（[`../scripts/vocab/design-doc.json`](../scripts/vocab/design-doc.json) の forbidden は `[]`）。これは設計上の判断であり、欠落ではない。
+**本 doc_type（design-doc）の機械語彙チェック（vocab）は、進み具合の記録を表す3語だけを持つ**（[`../scripts/vocab/design-doc.json`](../scripts/vocab/design-doc.json)）。これまでは forbidden が空だったが、それは Design Doc の逸脱が構造・量・文脈の判定で、禁止語の部分一致では拾えないからだった。今回の3語は、実際の設計書で進み具合の記録（状態欄の着手や完了を示す語など）にだけ出て、機械で拾えた。そのため持たせている。
 
-注意すべきは、**同じ agile でも [`./acceptance-criteria.md`](./acceptance-criteria.md) は vocab を持つ**（Then の曖昧期待結果3語）ことである。AC が vocab を持てたのは、その逸脱（Then の観測可能性違反）が test-case-spec で**部分一致の誤爆なく機械検出できると実証済み**の定型句だったからである。これに対し **Design Doc の逸脱（全セクション強制記入・arc42 全12セクション埋め・C4 の L4 クラス図を最初から全描画・自明な実装やバグ修正の過剰文書化・gold plating）は、いずれも構造・量・文脈の判定**であって、特定の禁止トークンの部分一致では原理的に拾えない。とりわけ「クラス図」を禁止語にすると、Design Doc が C4／詳細設計へ**正当に委譲を語る文**（「L4 のクラス図レベルは詳細設計へ委譲する」等）で誤爆する。
+禁止語（フェンス内に置くことで、本レシピ自身が検査に掛からないようにしている）:
 
-> **vocab の有無は『その doc_type の逸脱が機械で綺麗に拾えるか』で決まる**——agile か WF かの別ではない。AC は拾えたから vocab を持ち、user-story と Design Doc は拾えないから vocab を空にする。これが agile の **rubric 主導**の正しい現れであり、機械で綺麗に拾える逸脱だけ機械に任せ、それ以外（L4 先取り・gold plating・自明文書化・代替の事後正当化・トレース紐付けの質）は [`../rubric/design-doc.md`](../rubric/design-doc.md) の質的判定へ委ねる。
+```
+実装済み  → 進み具合の記録。納品後に正しくなくなる。implementation-plan／課題管理へ
+実装中    → 同上
+実装着手  → 同上
+```
 
-> **予防的ガイド（将来 vocab を足す場合）**: 本 doc_type は forbidden が空なので現状は何も禁止していないが、仮に将来 vocab を持たせたくなっても、Design Doc 固有の頻出語「クラス図」「C4」「arc42」は禁止語にしてはならない——正当な設計記述・委譲記述（「L4 のクラス図レベルは詳細設計へ委譲する」等）と同一トークンになり部分一致が誤爆するためである（技術名・製品名・`SQL` も同様で、WF/srs・architecture-design の「技術名は機械 vocab で弾かず質的判定へ」と同方針・S4 非対称）。これらの逸脱は rubric の質的判定で見る。
+**fail-open**: 既存システムの説明で、上の禁止語の1つ目が正当に出ることがある（たとえば現行の認証機能を指して、その流用を述べる文）。その場合は機械が検出しても逸脱とは限らず、人間が棄却する。ブロックは利用側の判断である。
+
+> **vocab の有無は『その doc_type の逸脱が機械で綺麗に拾えるか』で決まる**——agile か WF かの別ではない。AC は Then の曖昧期待結果3語が拾えたので vocab を持ち、user-story は拾えないので空である。Design Doc は、全セクション強制記入・arc42 全12セクション埋め・C4 の L4 クラス図を最初から全描画・自明な実装やバグ修正の過剰文書化・gold plating が構造・量・文脈の判定なので、これらは [`../rubric/design-doc.md`](../rubric/design-doc.md) の質的判定が主である。機械が持つのは進み具合の3語だけで、フェーズ分割の中身（割り付けか設計の判断か）は rubric が見る。
+
+> **予防的ガイド（vocab を足す場合）**: Design Doc 固有の頻出語「クラス図」「C4」「arc42」は禁止語にしてはならない——正当な設計記述・委譲記述（「L4 のクラス図レベルは詳細設計へ委譲する」等）と同一トークンになり部分一致が誤爆するためである（技術名・製品名・`SQL` も同様で、WF/srs・architecture-design の「技術名は機械 vocab で弾かず質的判定へ」と同方針・S4 非対称）。「フェーズ」も、設計の判断としての分け方で正当に出るため禁止語にしない。

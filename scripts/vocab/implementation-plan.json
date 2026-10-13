@@ -1,0 +1,5 @@
+{
+  "doc_type": "implementation-plan",
+  "forbidden": [],
+  "note": "implementation-plan は vocab を意図的に空にする(design-doc/rfc と同型)。実装計画の逸脱(計画の中で設計を初めて決める/順番に依存・リスクの理由がない)は文脈の判定であり、特定の禁止トークンの部分一致では拾えない。進み具合の語(実装済み等)は design-doc/srs では納品後に正しくなくなる記述として禁止するが、計画では版の履歴や前提の説明として正当に出うる(計画は版を重ねてよい)ため禁止にしない。進み具合を計画に書き込むこと自体は責務対照表が『含まない』と定める(課題管理へ)が、機械では割れないので rubric/implementation-plan.md の質的判定へ委ねる。空 forbidden は status=pass を返す(skipped でなく)＝『禁止語の逸脱なし』の狭い主張。"
+}
