@@ -1,3 +1,8 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/brand/logo/doc_standards-dark.svg">
+  <img alt="doc_standards" src="assets/brand/logo/doc_standards.svg" width="420">
+</picture>
+
 # doc-standards
 
 ソフトウェアの工程ドキュメントを、工程にふさわしい深さで書くための標準ライブラリと、それを使う Claude Code のスキルです。
